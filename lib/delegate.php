@@ -1,5 +1,7 @@
 <?php
 
+namespace Phling;
+
 abstract class delegate {
 	abstract public function setDelegator($d);
 

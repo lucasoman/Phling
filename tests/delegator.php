@@ -6,7 +6,7 @@ require_once('lib/delegatornomethodexception.php');
 
 $tester->setGroup('Delegator');
 
-class DelegateA extends Delegate {
+class DelegateA extends \Phling\Delegate {
 	public function setDelegator($d) {
 		$this->_delegator = $d;
 	}
@@ -15,14 +15,10 @@ class DelegateA extends Delegate {
 		return 'test method a';
 	}
 
-	static public function testStaticMethodA() {
-		return 'test static method a';
-	}
-
 	private $_delegator;
 }
 
-class DelegatorA extends Delegator {
+class DelegatorA extends \Phling\Delegator {
 }
 
 $delegator = new DelegatorA();

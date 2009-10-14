@@ -1,5 +1,7 @@
 <?php
 
-class DelegatorNoMethodException extends Exception {} 
+namespace Phling;
+
+class DelegatorNoMethodException extends \Exception {} 
 
 ?>

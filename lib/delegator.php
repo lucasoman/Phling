@@ -1,5 +1,7 @@
 <?php
 
+namespace Phling;
+
 class Delegator {
 	public function addDelegate($delegate) {
 		$delegate->setDelegator($this);
