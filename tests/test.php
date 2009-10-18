@@ -5,6 +5,7 @@ require_once('../Tester/tester.php');
 $tester = Tester::singleton();
 $tester->runTests(array(
 			array('tests/delegator.php',Tester::TESTRUN),
+			array('tests/form.php',Tester::TESTRUN),
 			));
 
 $tester->setShowTests();

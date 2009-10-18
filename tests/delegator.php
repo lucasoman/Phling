@@ -15,6 +15,7 @@ class DelegateA extends \Phling\Delegate {
 		return 'test method a';
 	}
 
+	public $_delegateAttrA = 'delegate attr a';
 	private $_delegator;
 }
 
@@ -25,5 +26,10 @@ $delegator = new DelegatorA();
 $delegator->addDelegate(new DelegateA());
 
 $tester->test('calls delegated method',$delegator->testMethodA(),'test method a');
+$tester->test('returns delegated attr',$delegator->_delegateAttrA,'delegate attr a');
+
+$delegator->_delegateAttrA = 'attr value reset';
+
+$tester->test('sets delegated attr',$delegator->_delegateAttrA,'attr value reset');
 
 ?>

@@ -19,6 +19,6 @@ Traits/Roles in PHP. See this [blog post](http://lucasoman.blogspot.com/2009/09/
 
 
 ## To Do
-- add namespaces
+
 - add traits
 - form delegate
