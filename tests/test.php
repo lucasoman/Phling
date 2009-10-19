@@ -2,6 +2,15 @@
 
 require_once('../Tester/tester.php');
 
+require_once('lib/delegator.php');
+require_once('lib/delegate.php');
+require_once('lib/delegatornomethodexception.php');
+require_once('lib/delegates/form.php');
+
+class DelegatorA extends \Phling\Delegator {
+}
+
+
 $tester = Tester::singleton();
 $tester->runTests(array(
 			array('tests/delegator.php',Tester::TESTRUN),

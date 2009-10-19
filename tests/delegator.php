@@ -1,9 +1,5 @@
 <?php
 
-require_once('lib/delegator.php');
-require_once('lib/delegate.php');
-require_once('lib/delegatornomethodexception.php');
-
 $tester->setGroup('Delegator');
 
 class DelegateA extends \Phling\Delegate {
@@ -17,9 +13,6 @@ class DelegateA extends \Phling\Delegate {
 
 	public $_delegateAttrA = 'delegate attr a';
 	private $_delegator;
-}
-
-class DelegatorA extends \Phling\Delegator {
 }
 
 $delegator = new DelegatorA();
