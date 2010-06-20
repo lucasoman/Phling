@@ -13,8 +13,7 @@ class DelegatorA extends \Phling\Delegator {
 
 $tester = Tester::singleton();
 $tester->runTests(array(
-			array('tests/delegator.php',Tester::TESTRUN),
-			array('tests/form.php',Tester::TESTRUN),
+			array('tests',Tester::TESTRUN),
 			));
 
 $tester->setShowTests();
@@ -22,6 +21,7 @@ $tester->setShowTotals();
 $tester->setShowFailing();
 $tester->setShowPassing(false);
 $tester->setShowContents();
+$tester->setShowColor();
 print($tester->getResults());
 
 ?>

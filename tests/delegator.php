@@ -3,7 +3,7 @@
 $tester->setGroup('Delegator');
 
 class DelegateA extends \Phling\Delegate {
-	public function setDelegator($d) {
+	public function setDelegator(\Phling\Delegator $d) {
 		$this->_delegator = $d;
 	}
 

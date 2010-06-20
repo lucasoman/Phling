@@ -10,7 +10,7 @@ $post = array(
 		'ud2'=>"test'<>",
 		'ud3'=>"test'<>",
 		);
-$delegator->setUserData($post);
+$delegator->setUserData($post,array('ud1','ud2','ud3'));
 
 $tester->test('set post values',$delegator->ud1,'test');
 $tester->test('values untouched',$delegator->ud2,"test'<>");

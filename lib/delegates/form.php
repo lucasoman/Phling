@@ -4,19 +4,20 @@ namespace Phling\Delegates;
 
 class Form extends \Phling\Delegate {
 	/**
-	 * set the user input
+	 * Store user input in delegator. Only allowed keys are set to prevent
+	 * important values from being overwritten and to prevent security holes.
 	 *
 	 * @author Lucas Oman <me@lucasoman.com>
 	 * @param array user input (typically POST or GET data)
+	 * @param array keys that are allowed to be set
 	 * @return null
 	 */
-	public function setUserData($post) {
+	public function setUserData(array $post,array $allowed) {
 		$this->_post = $post;
 		foreach ($this->_post as $i=>$v) {
-			if ($this->_sanitizeHtml) {
-				$v = $this->sanitizeHtml($v);
+			if (in_array($i,$allowed)) {
+				$this->_delegator->$i = $v;
 			}
-			$this->_delegator->$i = $v;
 		}
 	}
 
@@ -27,7 +28,7 @@ class Form extends \Phling\Delegate {
 	 * @param delegator
 	 * @return null
 	 */
-	public function setDelegator($d) {
+	public function setDelegator(\Phling\Delegator $d) {
 		$this->_delegator = $d;
 	}
 
