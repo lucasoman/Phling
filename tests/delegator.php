@@ -11,18 +11,26 @@ class DelegateA extends \Phling\Delegate {
 		return 'test method a';
 	}
 
-	public $_delegateAttrA = 'delegate attr a';
-	private $_delegator;
+	public function delegatorMethod() {
+		return 'delegated method';
+	}
+
+	public $delegateAttrA = 'delegate attr a';
+	public $delegatorAttr = 'delegated attribute';
 }
 
 $delegator = new DelegatorA();
 $delegator->addDelegate(new DelegateA());
 
 $tester->test('calls delegated method',$delegator->testMethodA(),'test method a');
-$tester->test('returns delegated attr',$delegator->_delegateAttrA,'delegate attr a');
+$tester->test('returns delegated attr',$delegator->delegateAttrA,'delegate attr a');
 
-$delegator->_delegateAttrA = 'attr value reset';
+$delegator->delegateAttrA = 'attr value reset';
 
-$tester->test('sets delegated attr',$delegator->_delegateAttrA,'attr value reset');
+$tester->test('sets delegated attr',$delegator->delegateAttrA,'attr value reset');
+$tester->test('delegator methods take precedence',$delegator->delegatorMethod(),'delegator method');
+$tester->test('delegator attributes take precedence (get)',$delegator->delegatorAttr,'delegator attribute');
+$delegator->delegatorAttr = 'delegator attribute modified';
+$tester->test('delegator attributes take precedence (set)',$delegator->delegatorAttr,'delegator attribute modified');
 
 ?>

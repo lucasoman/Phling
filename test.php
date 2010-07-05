@@ -8,6 +8,11 @@ require_once('lib/delegatornomethodexception.php');
 require_once('lib/delegates/form.php');
 
 class DelegatorA extends \Phling\Delegator {
+	public function delegatorMethod() {
+		return 'delegator method';
+	}
+
+	public $delegatorAttr = 'delegator attribute';
 }
 
 

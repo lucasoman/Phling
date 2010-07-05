@@ -7,7 +7,7 @@
 
 namespace Phling;
 
-abstract class delegate {
+class Delegate {
 	/**
 	 * stores the delegator who owns this delegate to be used
 	 * later if necessary
@@ -16,7 +16,19 @@ abstract class delegate {
 	 * @param delegator
 	 * @return null
 	 */
-	abstract public function setDelegator(\Phling\Delegator $d);
+	public function setDelegator(\Phling\Delegator $d) {
+		$this->_delegator = $d;
+	}
+
+	/**
+	 * get the delegator that delgates to this delegate
+	 *
+	 * @author Lucas Oman <me@lucasoman.com>
+	 * @return \Phling\Delegator object
+	 */
+	public function getDelegator() {
+		return $this->_delegator;
+	}
 
 	/**
 	 * PHP magic method for an unknown method.
@@ -45,6 +57,13 @@ abstract class delegate {
 	static public function __callStatic($funcName,$args) {
 		throw new DelegatorNoMethodException($funcName);
 	}
+
+	/**
+	 * Delegator that delegates to this delegate
+	 *
+	 * @var Delegator
+	 */
+	protected $_delegator;
 }
 
 ?>

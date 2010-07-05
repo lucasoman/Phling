@@ -1,8 +1,23 @@
 <?php
+/**
+ * Helps a model manage user data securely.
+ *
+ * @author Lucas Oman <me@lucasoman.com>
+ *
+ * class DelegatorChild extends \Phling\Delegator { ... }
+ * $delegator = new DelegatorChild();
+ * $delegator->addDelegate(new \Phling\Delegates\Form());
+ * $delegator->setUserData($_POST,array('username','password','rememberMe'));
+ * $query = "select * from users where * username='".$delegator->sanitized('sql')->username."'";
+ */
 
 namespace Phling\Delegates;
 
 class Form extends \Phling\Delegate {
+	public function __construct() {
+		$this->_sanitized = array();
+	}
+
 	/**
 	 * Store user input in delegator. Only allowed keys are set to prevent
 	 * important values from being overwritten and to prevent security holes.
@@ -14,6 +29,7 @@ class Form extends \Phling\Delegate {
 	 */
 	public function setUserData(array $post,array $allowed) {
 		$this->_post = $post;
+		$this->_allowed = $allowed;
 		foreach ($this->_post as $i=>$v) {
 			if (in_array($i,$allowed)) {
 				$this->_delegator->$i = $v;
@@ -22,50 +38,31 @@ class Form extends \Phling\Delegate {
 	}
 
 	/**
-	 * sets the delegator that commands this delegate
+	 * Get an object containing values sanitized by type.
+	 * Type is the second part of the name of any of this class's sanitize_*
+	 * methods. The delegator can also define its own sanitize_* methods.
 	 *
 	 * @author Lucas Oman <me@lucasoman.com>
-	 * @param delegator
-	 * @return null
+	 * @param string type
+	 * @return StdClass with sanitized values
 	 */
-	public function setDelegator(\Phling\Delegator $d) {
-		$this->_delegator = $d;
-	}
-
-	/**
-	 * sanitize values
-	 *
-	 * @author Lucas Oman <me@lucasoman.com>
-	 * @param string which type of sanitization
-	 * @param array names to sanitize
-	 * @return null
-	 */
-	public function sanitize($type,$which) {
-		if (($method = $this->getSanitizeMethod($type)) === false) {
-			throw new Exception('Unknown sanitization type.');
-		}
-		foreach ($which as $v) {
-			$this->_delegator->$v = $this->$method($this->_delegator->$v);
-		}
-	}
-
-	/**
-	 * sanitize values
-	 *
-	 * @author Lucas Oman <me@lucasoman.com>
-	 * @param string which type of sanitization
-	 * @param array names to exclude from sanitization
-	 * @return null
-	 */
-	public function sanitizeExcept($type,$which) {
-		if (($method = $this->getSanitizeMethod($type)) === false) {
-			throw new Exception('Unknown sanitization type.');
-		}
-		foreach ($this->_post as $v=>$value) {
-			if (!array_search($v,$which)) {
-				$this->_delegator->$v = $this->$method($this->_delegator->$v);
+	public function sanitized($type) {
+		if (isset($this->_sanitized[$type])) {
+			$obj = $this->_sanitized[$type];
+		} else {
+			if (($method = $this->getSanitizeMethod($type)) === false) {
+				throw new Exception('Unknown sanitization type.');
 			}
+			$obj = new \StdClass();
+			foreach ($this->_allowed as $v) {
+				$obj->$v = $this->_delegator->$method($this->_delegator->$v);
+			}
+
+			// cache this for later use
+			$this->_sanitized[$type] = $obj;
 		}
+
+		return $obj;
 	}
 
 	/**
@@ -77,14 +74,11 @@ class Form extends \Phling\Delegate {
 	 */
 	private function getSanitizeMethod($type) {
 		$type = strtolower($type);
-		switch ($type) {
-			case 'sql':
-				return 'sanitizeSqlString';
-			case 'html':
-				return 'sanitizeHtmlString';
-			default:
-				return false;
+		$method = 'sanitize_'.$type;
+		if (method_exists($this,$method) || method_exists($this->_delegator,$method)) {
+			return $method;
 		}
+		return false;
 	}
 
 	/**
@@ -94,7 +88,7 @@ class Form extends \Phling\Delegate {
 	 * @param string to sanitize
 	 * @return string sanitized
 	 */
-	private function sanitizeSqlString($v) {
+	public function sanitize_sql($v) {
 		$v = mysql_real_escape_string($v);
 		return $v;
 	}
@@ -106,14 +100,31 @@ class Form extends \Phling\Delegate {
 	 * @param string to sanitize
 	 * @return string sanitized
 	 */
-	private function sanitizeHtmlString($v) {
+	public function sanitize_html($v) {
 		$v = htmlspecialchars($v);
 		return $v;
 	}
 
+	/**
+	 * post or get data from delegator
+	 *
+	 * @var array
+	 */
 	private $_post;
-	private $_delegator;
-	private $_sanitizeHtml;
+
+	/**
+	 * allowed user-supplied variable names
+	 *
+	 * @var array
+	 */
+	private $_allowed;
+
+	/**
+	 * cached stdclass objects sanitized for each type
+	 *
+	 * @var array
+	 */
+	private $_sanitized;
 }
 
 ?>
