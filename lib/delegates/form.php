@@ -32,7 +32,7 @@ class Form extends \Phling\Delegate {
 		$this->_allowed = $allowed;
 		foreach ($this->_post as $i=>$v) {
 			if (in_array($i,$allowed)) {
-				$this->_delegator->$i = $v;
+				$this->getDelegator()->$i = $v;
 			}
 		}
 	}
@@ -55,7 +55,7 @@ class Form extends \Phling\Delegate {
 			}
 			$obj = new \StdClass();
 			foreach ($this->_allowed as $v) {
-				$obj->$v = $this->_delegator->$method($this->_delegator->$v);
+				$obj->$v = $this->getDelegator()->$method($this->getDelegator()->$v);
 			}
 
 			// cache this for later use
@@ -75,7 +75,7 @@ class Form extends \Phling\Delegate {
 	private function getSanitizeMethod($type) {
 		$type = strtolower($type);
 		$method = 'sanitize_'.$type;
-		if (method_exists($this,$method) || method_exists($this->_delegator,$method)) {
+		if (method_exists($this,$method) || method_exists($this->getDelegator(),$method)) {
 			return $method;
 		}
 		return false;

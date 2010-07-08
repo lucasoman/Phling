@@ -21,4 +21,6 @@ Traits/Roles in PHP. See this [blog post](http://lucasoman.blogspot.com/2009/09/
 ## To Do
 
 - add ORM delegate
+	- finish getTableData()
+	- save() with prepared stmt
 - add traits
